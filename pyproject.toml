@@ -6,8 +6,3 @@ build-backend = "flit_core.buildapi"
 name = "magicremote-docts"
 authors = [{name = "deploy.vtrump", email = "deploy@vtrump.com"}]
 dynamic = ["version", "description"]
-
-[tool.readthedocs-custom-steps]
-script = """
-pydoc-markdown --build --site-dir "$PWD/_build/html"
-"""
