@@ -6,3 +6,9 @@ build-backend = "flit_core.buildapi"
 name = "magicremote-docts"
 authors = [{name = "deploy.vtrump", email = "deploy@vtrump.com"}]
 dynamic = ["version", "description"]
+
+[tool.readthedocs-custom-steps]
+script = """
+bash .scripts/generate-changelog.sh >docs/changelog.md
+python -m "$@"
+"""
