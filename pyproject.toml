@@ -9,6 +9,5 @@ dynamic = ["version", "description"]
 
 [tool.readthedocs-custom-steps]
 script = """
-bash .scripts/generate-changelog.sh >docs/changelog.md
-python -m "$@"
+pydoc-markdown --build --site-dir "$PWD/_build/html"
 """
