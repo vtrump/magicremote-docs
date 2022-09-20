@@ -2,9 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>This is Demo</title>
+    <title>MagicRemote Demo</title>
+    <script src="static/jquery.min.js"></script>
+    <script src="static/jquery.form.min.js"></script>
+    <script src="static/qrcode.min.js"></script>
 </head>
 <body>
-This is Demo
+
+<h3>MagicRemote Demo</h3>
+<br/>
+<button id="btn_connect_apply">Create a new connection</button>
+<div class="key-pair">
+    <p>Your Key: <span id="key"></span></p>
+    <div id="qrcode"></div>
+</div>
+<div class="status-bar">
+    <p>Connection status: <b id="status">Unpaired</b></p>
+    <p>Device Info: <b id="device"></b></p>
+    <p>Device Status: <b id="deviceStatus">None</b></p>
+</div>
+
+<div class="cmd-w" style="display: none">
+    <button id="btn_send_cmd">Send Command</button>
+</div>
+
+<script>
+    let key = null;
+    let connect_checker = null;
+    let device_checker = null;
+    $(function () {
+        $('#btn_connect_apply').click(function () {
+            let btn = $('button')
+            btn.attr('disabled', true)
+            $.ajax({
+                type: 'post',
+                url: 'https://mg-demo.vtio.cn/connect/apply',
+                success: function (data) {
+                    btn.attr('disabled', false)
+                    if (data.success) {
+                        $('#btn_connect_apply').hide()
+                        key = data.key;
+                        $('#key')[0].innerText = key;
+                        new QRCode(document.getElementById("qrcode"), key);
+
+                        connect_checker = setInterval(function () {
+                            $.ajax({
+                                type: "get",
+                                url: 'https://mg-demo.vtio.cn/connect/check?key=' + key,
+                                success: function (data) {
+                                    if (data.success) {
+                                        $('#status')[0].innerText = 'Paired';
+                                        $('#device')[0].innerText = JSON.stringify(data.device);
+                                        clearInterval(connect_checker)
+
+                                        device_checker = setInterval(function () {
+                                            $.ajax({
+                                                type: "get",
+                                                url: 'https://mg-demo.vtio.cn/connect/device/status?key=' + key,
+                                                success: function (data) {
+                                                    if (data.success) {
+                                                        if (data.status === 1) {
+                                                            $('#deviceStatus')[0].innerText = 'Online';
+                                                        } else {
+                                                            $('#deviceStatus')[0].innerText = 'Offline';
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        }, 5000)
+
+                                        $('.cmd-w').show()
+                                    }
+                                }
+                            })
+                        }, 1500)
+                    }
+                }
+            })
+        })
+
+        $('#btn_send_cmd').click(function () {
+            let btn = $('button')
+            btn.attr('disabled', true);
+
+            $.ajax({
+                type: 'post',
+                url: 'https://mg-demo.vtio.cn/connect/event/push',
+                data: {
+                    'key': key,
+                    'data': JSON.stringify({'x': 1, 'y': 2})
+                },
+                success: function (data) {
+                    btn.attr('disabled', false);
+                    if (data.success) {
+                        alert('Send Success')
+                    } else {
+                        alert(data.errmsg)
+                    }
+
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>
