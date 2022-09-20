@@ -55,4 +55,4 @@
 ## 推送命令
 
 ## Demo
-* [Demo](/demo.html)
+* [Demo](https://htmlpreview.github.io/?https://github.com/vtrump/magicremote-docs/blob/main/docs/demo.html)
