@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MagicRemote Command Editor</title>
+    <script src="static/jquery.min.js"></script>
+    <script src="static/jquery.form.min.js"></script>
+    <script src="static/qrcode.min.js"></script>
+    <style type="text/css">
+        .rhythm-editor {
+            width: 100%;
+            padding: 0 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+
+        .rhythm-editor .col {
+            width: 8px;
+            height: 100px;
+            margin-right: 4px;
+            outline: 1px rgba(0, 0, 0, 0.2) solid;
+            position: relative;
+        }
+
+        .rhythm-editor .col .pin {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            left: 1px;
+            outline: 1px #000 solid;
+            cursor: pointer;
+            z-index: -1;
+            transition: bottom 0.1s;
+        }
+    </style>
+</head>
+<body>
+
+<h3>MagicRemote Command Editor</h3>
+<br/>
+<button id="btn_create_rhythm">Create a new rhythm</button>
+<div class="rhythm-editor"></div>
+<script>
+    $(function () {
+        $('#btn_create_rhythm').click(function () {
+            $('.rhythm-editor')[0].innerHTML = '';
+            for (let i = 0; i < 100; i++) {
+                $('.rhythm-editor')[0].innerHTML += '<div class="col"><div class="pin" style="bottom: 50%;"></div></div>'
+            }
+        });
+
+        $('body').on('mousemove', '.rhythm-editor .col', function (e) {
+            let col_h = $(this).innerHeight();
+            let bottom_percent = parseInt((col_h - e.offsetY) / col_h * 100)
+            $(this).find('.pin').css('bottom', bottom_percent + '%');
+            $(this).attr('data-value', bottom_percent);
+
+            let prev = $(this).prev()
+            if (prev.length > 0) {
+                let prev_prev = prev.prev()
+                if (prev_prev.length > 0) {
+                    let pp_bottom = parseInt(parseInt(prev_prev.find('.pin').css('bottom')) / col_h * 100)
+                    let p_bottom = parseInt((bottom_percent + pp_bottom) / 2)
+                    prev.find('.pin').css('bottom', p_bottom + '%')
+                    prev.attr('data-value', p_bottom)
+                }
+            }
+
+        })
+    })
+</script>
+</body>
+</html>
