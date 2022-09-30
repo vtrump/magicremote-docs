@@ -23,7 +23,10 @@
 </div>
 
 <div class="cmd-w" style="display: none">
-    <button id="btn_send_cmd">Send Command</button>
+    <button id="btn_send_cmd_1">Send Command [Shake Once]</button>
+    <button id="btn_send_cmd_2">Send Command [Shake Twice]</button>
+    <button id="btn_send_cmd_3">Send Command [Shake 5 seconds]</button>
+    <button id="btn_send_cmd_4">Send Command [Shake Wave 1]</button>
 </div>
 
 <script>
@@ -81,29 +84,60 @@
             })
         })
 
-        $('#btn_send_cmd').click(function () {
-            let btn = $('button')
-            btn.attr('disabled', true);
+        $('#btn_send_cmd_1').click(function () {
+            send_cmd({
+                'cmd': 's1',
+                'stroke': 100
+            })
+        })
 
-            $.ajax({
-                type: 'post',
-                url: 'https://mg-demo.vtio.cn/connect/event/push',
-                data: {
-                    'key': key,
-                    'data': JSON.stringify({'x': 1, 'y': 2})
-                },
-                success: function (data) {
-                    btn.attr('disabled', false);
-                    if (data.success) {
-                        alert('Send Success')
-                    } else {
-                        alert(data.errmsg)
-                    }
+        $('#btn_send_cmd_2').click(function () {
+            send_cmd({
+                'cmd': 's1',
+                'repeat': 2,
+                'stroke': 100
+            })
+        })
 
-                }
+        $('#btn_send_cmd_3').click(function () {
+            send_cmd({
+                'cmd': 's1',
+                'last': 5,
+                'stroke': 100
+            })
+        })
+
+        $('#btn_send_cmd_4').click(function () {
+            send_cmd({
+                'cmd': 'w1',
+                'repeat': 1,
+                'stroke': 100
             })
         })
     })
+
+    function send_cmd(cmd) {
+        let btn = $('button')
+        btn.attr('disabled', true);
+
+        $.ajax({
+            type: 'post',
+            url: 'https://mg-demo.vtio.cn/connect/event/push',
+            data: {
+                'key': key,
+                'data': JSON.stringify(cmd)
+            },
+            success: function (data) {
+                btn.attr('disabled', false);
+                if (data.success) {
+                    alert('Send Success')
+                } else {
+                    alert(data.errmsg)
+                }
+
+            }
+        })
+    }
 </script>
 </body>
 </html>

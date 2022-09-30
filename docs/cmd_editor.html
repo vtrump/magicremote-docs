@@ -69,6 +69,18 @@
                 }
             }
 
+
+            let next = $(this).next()
+            if (next.length > 0) {
+                let next_next = next.next()
+                if (next_next.length > 0) {
+                    let nn_bottom = parseInt(parseInt(next_next.find('.pin').css('bottom')) / col_h * 100)
+                    let n_bottom = parseInt((bottom_percent + nn_bottom) / 2)
+                    next.find('.pin').css('bottom', n_bottom + '%')
+                    next.attr('data-value', n_bottom)
+                }
+            }
+
         })
     })
 </script>
