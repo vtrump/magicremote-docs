@@ -23,10 +23,24 @@
 </div>
 
 <div class="cmd-w" style="display: none">
-    <button id="btn_send_cmd_1">Send Command [Shake Once]</button>
-    <button id="btn_send_cmd_2">Send Command [Shake Twice]</button>
-    <button id="btn_send_cmd_3">Send Command [Shake 5 seconds]</button>
-    <button id="btn_send_cmd_4">Send Command [Shake Wave 1]</button>
+    <button id="btn_send_cmd_1">Send Command [Shake Once 100% pos]</button>
+    <button id="btn_send_cmd_2">Send Command [Shake Once 50% pos]</button>
+    <button id="btn_send_cmd_3">Send Command [Shake 5 seconds 100% pos]</button>
+</div>
+
+<div class="video-w">
+    <hr/>
+    <p>
+        <b>FunScript played with video Demo</b>
+    </p>
+    <p>1. Before playing the video, send script to App, <a href="res/demo.funscript" target="_blank">preview the script here</a></p>
+    <div>
+        <button id="btn_send_script">Send Script</button>
+    </div>
+    <p>2. Now you can try to play, pause, seek the video</p>
+    <div>
+        <video id="video" src="res/blank-video-840s.mp4" controls></video>
+    </div>
 </div>
 
 <script>
@@ -69,6 +83,8 @@
                                                         } else {
                                                             $('#deviceStatus')[0].innerText = 'Offline';
                                                         }
+
+                                                        $('#device')[0].innerText = JSON.stringify(data.device);
                                                     }
                                                 }
                                             })
@@ -87,15 +103,14 @@
         $('#btn_send_cmd_1').click(function () {
             send_cmd({
                 'cmd': 's1',
-                'stroke': 100
+                'pos': 100
             })
         })
 
         $('#btn_send_cmd_2').click(function () {
             send_cmd({
                 'cmd': 's1',
-                'repeat': 2,
-                'stroke': 100
+                'pos': 50
             })
         })
 
@@ -107,13 +122,18 @@
             })
         })
 
-        $('#btn_send_cmd_4').click(function () {
-            send_cmd({
-                'cmd': 'w1',
-                'repeat': 1,
-                'stroke': 100
-            })
+        $('#video').on('play', function (e) {
+            console.log('play', $('#video')[0].currentTime)
         })
+
+        $('#video').on('pause', function (e) {
+            console.log('pause')
+        })
+
+        $('#video').on('timeupdate', function (e) {
+            console.log('timeupdate', $('#video')[0].currentTime)
+        })
+
     })
 
     function send_cmd(cmd) {
