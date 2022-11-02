@@ -135,7 +135,7 @@
             send_cmd({
                 'cmd': 's1',
                 'last': 5,
-                'stroke': 100
+                'pos': 100
             })
         })
 
@@ -148,11 +148,13 @@
 
         $('#video').on('play', function (e) {
             console.log('play', $('#video')[0].currentTime)
+            console.log(parseInt($('#video')[0].currentTime * 1000),)
             send_cmd({
                 'cmd': 'play',
                 'ts': parseInt($('#video')[0].currentTime * 1000),
                 'op_ts': new Date().getTime()
             })
+            frame = $('#video')[0].currentTime / 10 + 1
         })
 
         $('#video').on('pause', function (e) {
