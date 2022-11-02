@@ -6,6 +6,7 @@
     <script src="static/jquery.min.js"></script>
     <script src="static/jquery.form.min.js"></script>
     <script src="static/qrcode.min.js"></script>
+    <script src="static/jquery.noty.packaged.min.js"></script>
 </head>
 <body>
 
@@ -42,11 +43,26 @@
         <video id="video" src="res/blank-video-840s.mp4" controls></video>
     </div>
 </div>
-
+<script>
+    $.notice = function notice(text, after_show_func) {
+        noty({
+            text: text,
+            type: 'information',
+            dismissQueue: true,
+            layout: 'topCenter',
+            theme: 'relax',
+            timeout: 2000,
+            callback: {
+                afterClose: after_show_func
+            }
+        })
+    };
+</script>
 <script>
     let key = null;
     let connect_checker = null;
     let device_checker = null;
+    let frame = 1;
     $(function () {
         $('#btn_connect_apply').click(function () {
             let btn = $('button')
@@ -122,16 +138,40 @@
             })
         })
 
+        $('#btn_send_script').click(function () {
+            send_cmd({
+                'cmd': 'script',
+                'link': 'https://raw.githubusercontent.com/vtrump/magicremote-docs/main/docs/res/demo.funscript'
+            })
+        })
+
         $('#video').on('play', function (e) {
             console.log('play', $('#video')[0].currentTime)
+            send_cmd({
+                'cmd': 'play',
+                'ts': parseInt($('#video')[0].currentTime * 1000),
+                'op_ts': new Date().getTime()
+            })
         })
 
         $('#video').on('pause', function (e) {
             console.log('pause')
+            send_cmd({
+                'cmd': 'pause',
+                'op_ts': new Date().getTime()
+            })
         })
 
         $('#video').on('timeupdate', function (e) {
-            console.log('timeupdate', $('#video')[0].currentTime)
+            if ($('#video')[0].currentTime / 10 > frame) {
+                console.log('timeupdate', $('#video')[0].currentTime)
+                send_cmd({
+                    'cmd': 'frame',
+                    'ts': parseInt($('#video')[0].currentTime * 1000),
+                    'op_ts': new Date().getTime()
+                })
+                frame++;
+            }
         })
 
     })
@@ -148,11 +188,12 @@
                 'data': JSON.stringify(cmd)
             },
             success: function (data) {
+                console.log(data)
                 btn.attr('disabled', false);
                 if (data.success) {
-                    alert('Send Success')
+                    $.notice('Send Success')
                 } else {
-                    alert(data.errmsg)
+                    $.notice(data.errmsg)
                 }
 
             }
