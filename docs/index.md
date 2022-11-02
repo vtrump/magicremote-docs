@@ -9,11 +9,12 @@
 1. 注册
     * 前往 [https://mg-dash.vtio.cn/](https://mg-dash.vtio.cn/) 进行注册
     * 验证邮箱
-2. 创建应用, 设置回调链接
+2. 创建应用, 设置回调链接和安全域名
    ![create-app.png](res/create-app.png)
     * 填写您的应用名
     * 填写您的服务器上接受回调的链接, 回调链接说明请参考 `[下一章]` `如何开发您的应用` `步骤3`
         * 在每一次MagicRemote App和您的应用进行配对时, 此链接将会接受开放平台的回调
+    * 填写您存放funscript脚本的域名地址, 后续推送script脚本, 会检验域名是否符合安全域名, 此处无需http, 只需要裸域名
 3. 接入您的应用
     * 创建应用完成后, 您将在页面上获得您的AppID和AppSecret
 
@@ -50,9 +51,41 @@
     * 表单内容:
         * `key` 链接的key
         * `code` 鉴权的代码
-        * `data` 命令内容, 参看 `推送命令`
+        * `data` 命令内容, dump过后的json字符串, 参看 `推送命令`
 
 ## 推送命令
 
+### 普通操控
+
+* 震动
+    * cmd: s1
+    * pos: 震动强度 0-100
+
+### 播放funscript
+
+* 推送脚本
+    * cmd: script
+    * link: 下载链接
+
+* 播放
+    * cmd: play
+    * ts: 播放序列时间轴上时间戳
+    * op_ts: 命令操作的时间戳
+
+* 暂停
+    * cmd: pause
+    * op_ts: 命令操作的时间戳
+
+* 寻址
+    * cmd: seek
+    * ts: 播放序列时间轴上时间戳
+    * op_ts: 命令操作的时间戳
+
+* 对帧
+    * cmd: frame
+    * ts: 播放序列时间轴上时间戳
+    * op_ts: 命令操作的时间戳
+
 ## Demo
+
 * [Demo](https://htmlpreview.github.io/?https://github.com/vtrump/magicremote-docs/blob/main/docs/demo.html)
