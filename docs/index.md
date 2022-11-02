@@ -53,6 +53,19 @@
         * `code` 鉴权的代码
         * `data` 命令内容, dump过后的json字符串, 参看 `推送命令`
 
+6. 获取设备链接信息
+    * 链接地址 `https://mg-api.vtio.cn/open/device/status?key=[key]`
+    * headers中 包含 `{'token': [应用的AppSecret]}`
+    * 建议3-5秒查询一次
+    * 返回 设备设备状态和设备信息:
+        * success: true/false
+        * result:
+            * device_status
+                * 1 online
+                * 2 offline
+            * device
+                * 设备信息的json字符串
+
 ## 推送命令
 
 ### 普通操控
