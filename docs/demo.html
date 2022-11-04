@@ -34,13 +34,13 @@
     <p>
         <b>FunScript played with video Demo</b>
     </p>
-    <p>1. Before playing the video, send script to App, <a href="res/demo.funscript" target="_blank">preview the script here</a></p>
+    <p>1. Before playing the video, send script to App, <a href="res/demo2.funscript" target="_blank">preview the script here</a></p>
     <div>
         <button id="btn_send_script">Send Script</button>
     </div>
     <p>2. Now you can try to play, pause, seek the video</p>
     <div>
-        <video id="video" src="res/blank-video-840s.mp4" controls></video>
+        <video id="video" src="res/blank-video-559s.mp4" controls></video>
     </div>
 </div>
 <script>
@@ -142,7 +142,7 @@
         $('#btn_send_script').click(function () {
             send_cmd({
                 'cmd': 'script',
-                'link': 'https://raw.githubusercontent.com/vtrump/magicremote-docs/main/docs/res/demo.funscript'
+                'link': 'https://raw.githubusercontent.com/vtrump/magicremote-docs/main/docs/res/demo2.funscript'
             })
         })
 
